@@ -1,4 +1,4 @@
-Object[] chars = [ 'a', 'b', 'c', 'd', 'e' ]
+Object[] chars = [ 'a', 'b', 'c', 'd', 'e', 'f' ]
 
 static long factorial(int length) {
     long ret = 1;
@@ -36,6 +36,8 @@ static void permute(final Object[] ary, Closure process) {
 
 def set = new HashSet();
 def addSet = { Object[] args -> set.add(args.join()); };
+def counter = 0;
+def printThem = { Object[] args -> println("${++counter}: ${args}"); }
 
 permute(chars, addSet);
 assert(set.size() == factorial(chars.length));
