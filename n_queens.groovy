@@ -75,12 +75,12 @@ class Board {
     }
 }
 
-void solve(List<List<String>> solutions, Board board, int row) {
+void solve(List<Board> solutions, Board board, int row) {
     for(int col = 0; col < board.size; ++col) {
         if(board.canPlace(row, col)) {
             Board newBoard = board.place(row, col);
             if(row + 1 == board.size) {
-                solutions.add(newBoard.toList());
+                solutions.add(newBoard);
             }
             else {
                 solve(solutions, newBoard, row + 1);
@@ -90,10 +90,13 @@ void solve(List<List<String>> solutions, Board board, int row) {
 }
 
 List<List<String>> solveNQueens(int n) {
-    List<List<String>> solutions = new ArrayList<>();
+    List<Board> solutions = new ArrayList<>();
     solve(solutions, new Board(n), 0);
-    return solutions;
+    List<List<String>> ret = new ArrayList<>();
+    solutions.each { ret.add(it.toList()); }
+    return ret;
 }
+
 
 List<List<String>> solutions = solveNQueens(8);
 solutions.eachWithIndex { List<String> bList, int index ->
