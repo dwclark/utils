@@ -279,5 +279,75 @@ class Graph<T> {
 
         return walks;
     }
+
+    class ShortestPaths<V> {
+        V source;
+        Map<V,Integer> distances = [:];
+        Map<V,V> predecessors = [:];
+
+        int distanceTo(V v) {
+            return distances[v];
+        }
+
+        List<V> pathTo(V v) {
+            if(!predecessors.containsKey(v)) {
+                return Collections.emptyList();
+            }
+
+            List<V> list = [];
+            V node = v;
+            list << node;
+            while(node != source) {
+                node = predecessors[node];
+                list << node;
+            }
+
+            return list.reverse();
+        }
+        
+        V next(Set<V> remaining) {
+            V ret;
+            int min = Integer.MAX_VALUE;
+            
+            for(V v : remaining) {
+                if(distances[v] < min) {
+                    ret = v;
+                    min = distances[v];
+                }
+            }
+
+            return ret;
+        }
+    }
+
+    ShortestPaths<T> dijkstra(final T source) {
+        ShortestPaths<T> paths = new ShortestPaths<>(source: source);
+        Set<T> set = new HashSet<>();
+
+        nodes.keySet().each { T n ->
+            paths.distances[n] = Integer.MAX_VALUE;
+            paths.predecessors[n] = null;
+            set << n; };
+
+        paths.distances[source] = 0;
+        int max = 10;
+
+        T u = paths.next(set);
+        while(u != null) {
+            set.remove(u);
+
+            nodes[u].each { Edge<T> e ->
+                T neighbor = e.vertex;
+                int alt = paths.distances[u] + e.weight;
+                if(alt < paths.distances[neighbor]) {
+                    paths.distances[neighbor] = alt;
+                    paths.predecessors[neighbor] = u;
+                } };
+
+            u = paths.next(set);
+        }
+
+        return paths;
+    }
 }
 
