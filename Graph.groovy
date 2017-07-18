@@ -27,7 +27,7 @@ class Graph<T> {
 
     final Map<T,Set<Edge<T>>> nodes;
 
-    Graph(final List<T> all) {
+    Graph(final Collection<T> all) {
         Map<T,Set<Edge<T>>> tmp = new LinkedHashMap<>(all.size());
         all.each { T n -> tmp[n] = new HashSet<>(); };
         nodes = tmp.asImmutable();
@@ -102,7 +102,7 @@ class Graph<T> {
         }
 
         boolean connectedTo(final V vertex) {
-            return steps.keySet().contains(vertex);
+            return steps.containsKey(vertex);
         }
         
         DfsStep startVisit(final V current, final V predecessor) {
@@ -182,6 +182,28 @@ class Graph<T> {
 
     public boolean isConnected() {
         return depthFirstSearches().size() == 1;
+    }
+
+    public boolean isWeaklyConnected() {
+        Graph tmp = new Graph(nodes.keySet());
+        nodes.each { T node, Set<Edge<T>> edges ->
+            edges.each { Edge<T> e ->
+                tmp.addEdge(node, e.vertex); }; };
+
+        return tmp.connected;
+    }
+
+    public boolean isStronglyConnected() {
+        Set<T> allNodes = nodes.keySet();
+        allNodes.every { T node ->
+            DfsWalk<T> walk = depthFirstSearch(node);
+            allNodes.every { T lookFor ->
+                if(node == lookFor) {
+                    return true;
+                }
+                else {
+                    return walk.connectedTo(lookFor);
+                } }; };
     }
 
     public static class BfsStep<V> {

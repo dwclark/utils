@@ -29,4 +29,21 @@ public class TreeNode {
         inOrderWalk(this, closure);
         return sb.toString();
     }
+
+    boolean lessThan(final int val) {
+        return (this.val < val &&
+                (left == null || left.lessThan(val)) &&
+                (right == null || right.lessThan(val)));
+    }
+
+    boolean greaterThan(final int val) {
+        return (this.val > val &&
+                (left == null || left.greaterThan(val)) &&
+                (right == null || right.greaterThan(val)));
+    }
+
+    boolean isValid() {
+        return ((left == null || (left.lessThan(val) && left.valid)) &&
+                (right == null || (right.greaterThan(val) && right.valid)));
+    }
 }

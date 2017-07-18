@@ -60,3 +60,25 @@ biggerWeighted.addEdge(wnodes[5], wnodes[6], 3)
 def biggerPaths = biggerWeighted.dijkstra(0);
 println("Path to 6: ${biggerPaths.pathTo(6)}; distance: ${biggerPaths.distanceTo(6)}");
 println("Path to 4: ${biggerPaths.pathTo(4)}; distance: ${biggerPaths.distanceTo(4)}");
+
+def stronglyConnectedNodes = [ 0, 1, 2 ];
+def stronglyConnected = new Graph(stronglyConnectedNodes);
+stronglyConnected.with {
+    addEdge(stronglyConnectedNodes[0], stronglyConnectedNodes[1], 1);
+    addEdge(stronglyConnectedNodes[1], stronglyConnectedNodes[2], 1);
+    addEdge(stronglyConnectedNodes[2], stronglyConnectedNodes[0], 1);
+}
+
+println("stronglyConnected.isStronglyConnected(): ${stronglyConnected.stronglyConnected}");
+println("stronglyConnected.isConnected(): ${stronglyConnected.connected}");
+
+def weaklyConnectedNodes = [ 0, 1, 2 ];
+def weaklyConnected = new Graph(weaklyConnectedNodes);
+weaklyConnected.with {
+    addEdge(stronglyConnectedNodes[0], stronglyConnectedNodes[1], 1);
+    addEdge(stronglyConnectedNodes[1], stronglyConnectedNodes[2], 1);
+}
+
+println("weaklyConnected.isStronglyConnected(): ${weaklyConnected.stronglyConnected}");
+println("weaklyConnected.isWeaklyConnected(): ${weaklyConnected.weaklyConnected}");
+

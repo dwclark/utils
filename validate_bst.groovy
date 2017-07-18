@@ -1,36 +1,36 @@
 import static TreeNode.tnode;
 
-void valid(final boolean[] ret, final TreeNode node) {
-    if(node.left == null && node.right == null) {
-        return;
+boolean allLessThan(def node, int val) {
+    if(node == null) {
+        return true;
     }
-    else if(node.left != null && node.right == null) {
-        valid(ret, node.left);
-    }
-    else if(node.left == null && node.right != null) {
-        valid(ret, node.right);
-    }
-
-    if(node.left.val > node.val || node.right.val < node.val) {
-        ret[0] = false;
-    }
-    else {
-        valid(ret, node.left);
-        if(ret[0] == true) {
-            valid(ret, node.right);
-        }
-    }
+    
+    return node.val < val && allLessThan(node.left, val) && allLessThan(node.right, val);
 }
 
-public boolean isValidBST(TreeNode root) {
-    final boolean[] ret = new boolean[1];
-    ret[0] = true;
-    valid(ret, root);
-    return ret[0];
+boolean allGreaterThan(def node, int val) {
+    if(node == null) {
+        return true;
+    }
+    
+    return node.val > val && allGreaterThan(node.left, val) && allGreaterThan(node.right, val);
+}
+
+boolean isValidBST(def t) {
+    if(t == null) {
+        return true;
+    }
+    
+    return (allLessThan(t.left, t.val) &&
+            allGreaterThan(t.right, t.val) &&
+            isValidBST(t.left) &&
+            isValidBST(t.right));
 }
 
 def tree = tnode(2, tnode(1, null, null), tnode(3, null, null));
 def badTree = tnode(1, tnode(2, null, null), tnode(3, null, null));
+def tricky = tnode(2, tnode(1, null, tnode(4, null, null)), tnode(3, null, null));
 
-println(isValidBST(tree));
-println(isValidBST(badTree));
+println("tree: ${tree.valid}");
+println("badTree: ${badTree.valid}");
+println("tricky: ${tricky.valid}");
